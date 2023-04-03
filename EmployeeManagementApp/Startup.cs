@@ -44,11 +44,22 @@ namespace EmployeeManagementApp
             {
                 builder.AddFile("logs/logs.txt");
             });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAngularLocalhost",
+                                  builder => builder.WithOrigins("http://localhost:4200")
+                                    .AllowAnyHeader()
+                                    .AllowAnyMethod()
+                                    .AllowCredentials());
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -56,9 +67,12 @@ namespace EmployeeManagementApp
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "EmployeeManagementApp v1"));
             }
 
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors("AllowAngularLocalhost");
 
             app.UseAuthorization();
 

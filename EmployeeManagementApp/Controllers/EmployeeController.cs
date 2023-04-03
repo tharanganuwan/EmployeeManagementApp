@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DomainLayer.Dtos;
 using DomainLayer.Models;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -14,6 +15,7 @@ namespace EmployeeManagementApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowAngularLocalhost")]
     public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeService _service;
@@ -31,9 +33,11 @@ namespace EmployeeManagementApp.Controllers
         {
             try
             {
+                employee.dateOfBirth=DateTime.Now;
                 _service.AddEmployee(_mapper.Map<Employee>(employee));
                 _logger.LogInformation($"Add employee : {employee.firstName} {DateTime.Now.ToString("h:mm tt")}");
-                return StatusCode(200, $"Successfull Adding new Employee");
+                //return StatusCode(200, $"Successfull Adding new Employee");
+                return Ok();
             }
             catch (Exception ex)
             {
