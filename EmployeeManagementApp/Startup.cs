@@ -40,6 +40,7 @@ namespace EmployeeManagementApp
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IEmployeeService, EmployeeServiceIMPL>();
+            services.AddScoped<IUserService,UserServiceIMPL>();
             services.AddLogging(builder =>
             {
                 builder.AddFile("logs/logs.txt");
@@ -48,7 +49,8 @@ namespace EmployeeManagementApp
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAngularLocalhost",
-                                  builder => builder.WithOrigins("http://localhost:4200")
+                                  builder => builder
+                                    .WithOrigins("http://localhost:4200")
                                     .AllowAnyHeader()
                                     .AllowAnyMethod()
                                     .AllowCredentials());
@@ -66,6 +68,7 @@ namespace EmployeeManagementApp
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "EmployeeManagementApp v1"));
             }
+
 
 
             app.UseHttpsRedirection();

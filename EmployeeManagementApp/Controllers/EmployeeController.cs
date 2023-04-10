@@ -29,11 +29,11 @@ namespace EmployeeManagementApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddEmployee(CreateEmployeeDto employee) 
+        public IActionResult AddEmployee(CreateEmployeeDto employee)
         {
             try
             {
-                employee.dateOfBirth=DateTime.Now;
+                
                 _service.AddEmployee(_mapper.Map<Employee>(employee));
                 _logger.LogInformation($"Add employee : {employee.firstName} {DateTime.Now.ToString("h:mm tt")}");
                 //return StatusCode(200, $"Successfull Adding new Employee");
@@ -125,7 +125,7 @@ namespace EmployeeManagementApp.Controllers
                 employee.employeeId = employeeId;
                 _service.UpdateEmployee(employee);
                 _logger.LogInformation($"Update employee : {employee.employeeId} {DateTime.Now.ToString("h:mm tt")}");
-                return StatusCode(200, $"Successfull Update Employee");
+                return Ok();
             }
             catch (Exception ex)
             {
