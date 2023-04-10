@@ -22,7 +22,7 @@ namespace ServiceLayer.services.Impl
 
         public User Login(UserDto user)
         {
-            var founduser = _dbContext.tbl_user.FirstOrDefault(u => u.email == user.email && u.password == user.password);
+            var founduser = _dbContext.tbl_user.FirstOrDefault(u => u.email == user.email);
             return founduser;
         }
 

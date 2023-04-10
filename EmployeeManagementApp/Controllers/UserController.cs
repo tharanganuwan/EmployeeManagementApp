@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DomainLayer.Dtos;
 using DomainLayer.Models;
+using EmployeeManagementApp.Helpers;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -34,12 +35,15 @@ namespace EmployeeManagementApp.Controllers
         {
             try
             {
-                _service.Register(_mapper.Map<User>(user));
+                User rUser = _mapper.Map<User>(user);
+                rUser.password = PasswordHasher.HashPassword(user.password);
+                rUser.token = "";
+                _service.Register(rUser);
                 return Ok(
                     new
                     {
                         StatusCode = 200,
-                        Message = "User Login successfully."
+                        Message = "User Regisreation successfully."
                     });
             }
             catch (Exception ex)
@@ -59,15 +63,22 @@ namespace EmployeeManagementApp.Controllers
                 if (getUser == null)
                 {
                     return BadRequest(new { 
-                        StatusCode = 400,
+                        StatusCode = 404,
                         Message = "User Not Found."
                     });
                 }
-
+                if (!PasswordHasher.VerifyPassword(user.password, getUser.password))
+                {
+                    return BadRequest(new
+                    {
+                        StatusCode = 404,
+                        Message = "password is Incorrect."
+                    });
+                }
                 return Ok(
                     new{
                         StatusCode = 200,
-                        Message = "User retrieved successfully."
+                        Message = "Login successfully."
                     }
                 );
             }
