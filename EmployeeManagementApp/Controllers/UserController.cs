@@ -27,18 +27,51 @@ namespace EmployeeManagementApp.Controllers
             _service = service;
             _logger = logger;
             _mapper = mapper;
-
         }
 
         [HttpPost("register")]
-        public IActionResult Register(UserDto user)
+        public async Task<IActionResult> Register(UserDto user)
         {
             try
             {
-                User rUser = _mapper.Map<User>(user);
-                rUser.password = PasswordHasher.HashPassword(user.password);
-                rUser.token = "";
-                _service.Register(rUser);
+                //check user name
+                bool userExists = await _service.UserNameExist(user.userName);
+                if (userExists)
+                {
+                    return BadRequest(new
+                    {
+                        StatusCode = 400,
+                        Message = $"User '{user.userName}' already exists.",
+                    });
+                }
+
+                //check email
+                bool emailExists = await _service.UserEmailExist(user.email);
+                if (emailExists)
+                {
+                    return BadRequest(new
+                    {
+                        StatusCode = 400,
+                        Message = $"Email '{user.email}' already exists."
+                    });
+                }
+
+                //check password strength
+                var pass = ChechPassword.ChechPasswordStrength(user.password);
+                if(!string.IsNullOrEmpty(pass))
+                {
+                    return BadRequest(new
+                    {
+                        StatusCode = 400,
+                        Message = pass.ToString()
+                    });
+                }
+
+
+                User registerUser = _mapper.Map<User>(user);
+                registerUser.password = PasswordHasher.HashPassword(user.password);
+                registerUser.token = "";
+                await _service.Register(registerUser);
                 return Ok(
                     new
                     {
@@ -55,11 +88,11 @@ namespace EmployeeManagementApp.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login(UserDto user)
+        public async Task<IActionResult> Login(UserDto user)
         {
             try
             {
-                User getUser = _service.Login(user);
+                User getUser = await _service.Login(user);
                 if (getUser == null)
                 {
                     return BadRequest(new { 
@@ -75,10 +108,14 @@ namespace EmployeeManagementApp.Controllers
                         Message = "password is Incorrect."
                     });
                 }
+
+                getUser.token = CreateJwtToken.CreateJWT(getUser);
+
                 return Ok(
                     new{
                         StatusCode = 200,
-                        Message = "Login successfully."
+                        Message = "Login successfully.",
+                        Token=getUser.token
                     }
                 );
             }
@@ -89,5 +126,7 @@ namespace EmployeeManagementApp.Controllers
             }
 
         }
+
+        
     }
 }

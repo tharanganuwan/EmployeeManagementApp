@@ -20,17 +20,31 @@ namespace ServiceLayer.services.Impl
             _dbContext = dbContext;
         }
 
-        public User Login(UserDto user)
+        public async Task<User> Login(UserDto user)
         {
-            var founduser = _dbContext.tbl_user.FirstOrDefault(u => u.email == user.email);
+            var founduser = await _dbContext.tbl_user.FirstOrDefaultAsync(u => u.email == user.email);
+            if (founduser == null)
+            {
+                return null;
+            }
             return founduser;
         }
 
-        public void Register(User user)
+        public async Task Register(User user)
         {
             _dbContext.tbl_user.Add(user);
-            _dbContext.SaveChanges();
-           
+            await _dbContext.SaveChangesAsync();
+
+        }
+
+        public async Task<bool> UserEmailExist(string email)
+        {
+            return await _dbContext.tbl_user.AnyAsync(x => x.email == email);
+        }
+
+        public async Task<bool> UserNameExist(string user_Name)
+        {
+            return await _dbContext.tbl_user.AnyAsync(x=> x.userName==user_Name);
         }
     }
 }

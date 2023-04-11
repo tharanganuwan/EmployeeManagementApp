@@ -10,7 +10,9 @@ namespace ServiceLayer.services.Interface
 {
     public interface IUserService
     {
-        void Register(User user);
-        User Login(UserDto user);
+        Task Register(User user);
+        Task<User> Login(UserDto user);
+        Task<bool> UserNameExist(string user_Name);
+        Task<bool> UserEmailExist(string email);
     }
 }

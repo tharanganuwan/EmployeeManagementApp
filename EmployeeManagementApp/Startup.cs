@@ -1,4 +1,5 @@
 using AutoMapper;
+using EmployeeManagementApp.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RepositoryLayer.DbContextLayer;
 using ServiceLayer.services.Impl;
@@ -15,6 +17,7 @@ using ServiceLayer.services.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace EmployeeManagementApp
@@ -56,6 +59,25 @@ namespace EmployeeManagementApp
                                     .AllowCredentials());
             });
 
+            services.AddAuthentication("JWTAuth")
+                .AddJwtBearer("JWTAuth", options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+                    var keyBytes = Encoding.UTF8.GetBytes(Constants.Secret);
+                    var key = new SymmetricSecurityKey(keyBytes);
+
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidIssuer = Constants.Issuer,
+                        ValidAudience = Constants.Audience,
+                        IssuerSigningKey = key,
+                        ValidateIssuerSigningKey = true,
+                        ClockSkew = TimeSpan.Zero
+
+                    };
+                });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -77,6 +99,7 @@ namespace EmployeeManagementApp
 
             app.UseCors("AllowAngularLocalhost");
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
