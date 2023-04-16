@@ -34,6 +34,8 @@ namespace EmployeeManagementApp.Helpers
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.Now.AddHours(2),
                 SigningCredentials = signingCredentials,
+                Audience= Constants.Audience,
+                Issuer= Constants.Issuer,
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);

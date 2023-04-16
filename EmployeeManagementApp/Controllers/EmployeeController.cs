@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DomainLayer.Dtos;
 using DomainLayer.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,7 @@ namespace EmployeeManagementApp.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [EnableCors("AllowAngularLocalhost")]
+    [Authorize]
     public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeService _service;
@@ -46,6 +48,7 @@ namespace EmployeeManagementApp.Controllers
             }
         }
 
+       
         [HttpGet]
         public ActionResult<ICollection<EmployeeDto>> GetAllEmployee() 
         {
@@ -67,6 +70,7 @@ namespace EmployeeManagementApp.Controllers
             }
         }
 
+        
         [HttpGet("{employeeId}")]
         public ActionResult<EmployeeDto> GetSingleEmployee(long employeeId)
         {

@@ -71,9 +71,12 @@ namespace EmployeeManagementApp
                     {
                         ValidIssuer = Constants.Issuer,
                         ValidAudience = Constants.Audience,
+
                         IssuerSigningKey = key,
                         ValidateIssuerSigningKey = true,
-                        ClockSkew = TimeSpan.Zero
+                        ClockSkew = TimeSpan.Zero,
+                       /* ValidateAudience = false,
+                        ValidateIssuer = false,*/
 
                     };
                 });
