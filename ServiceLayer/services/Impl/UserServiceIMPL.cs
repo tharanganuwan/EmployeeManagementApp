@@ -37,6 +37,19 @@ namespace ServiceLayer.services.Impl
 
         }
 
+        public async Task updateResetPasswordToken(User user)
+        {
+            var userToUpdate = await _dbContext.tbl_user.FirstOrDefaultAsync(u => u.email == user.email);
+
+            if (userToUpdate != null)
+            {
+                userToUpdate.resetPasswordToken = user.resetPasswordToken;
+                userToUpdate.resetPasswordExpiry = user.resetPasswordExpiry; 
+
+                await _dbContext.SaveChangesAsync(); 
+            }
+        }
+
         public async Task<bool> UserEmailExist(string email)
         {
             return await _dbContext.tbl_user.AnyAsync(x => x.email == email);

@@ -14,5 +14,6 @@ namespace ServiceLayer.services.Interface
         Task<User> Login(UserDto user);
         Task<bool> UserNameExist(string user_Name);
         Task<bool> UserEmailExist(string email);
+        Task updateResetPasswordToken(User user);
     }
 }

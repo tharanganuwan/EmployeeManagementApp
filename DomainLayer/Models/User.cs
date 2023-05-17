@@ -23,5 +23,9 @@ namespace DomainLayer.Models
         [MaxLength(100)]
         [Required]
         public string email { get; set; }
+
+        public string resetPasswordToken { get; set; }
+
+        public DateTime resetPasswordExpiry { get; set; }
     }
 }

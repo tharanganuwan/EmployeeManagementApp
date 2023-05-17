@@ -43,6 +43,7 @@ namespace EmployeeManagementApp
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IEmployeeService, EmployeeServiceIMPL>();
+            services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IUserService,UserServiceIMPL>();
             services.AddLogging(builder =>
             {

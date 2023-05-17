@@ -57,7 +57,7 @@ namespace EmployeeManagementApp.Controllers
                 }
 
                 //check password strength
-                var pass = ChechPassword.ChechPasswordStrength(user.password);
+                var pass = CheckPassword.ChechPasswordStrength(user.password);
                 if(!string.IsNullOrEmpty(pass))
                 {
                     return BadRequest(new
@@ -97,7 +97,7 @@ namespace EmployeeManagementApp.Controllers
                 {
                     return BadRequest(new { 
                         StatusCode = 404,
-                        Message = "User Not Found."
+                        Message = "User email Not Found."
                     });
                 }
                 if (!PasswordHasher.VerifyPassword(user.password, getUser.password))

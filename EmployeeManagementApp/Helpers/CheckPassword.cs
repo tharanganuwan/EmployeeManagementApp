@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EmployeeManagementApp.Helpers
 {
-    public class ChechPassword
+    public class CheckPassword
     {
         public static string ChechPasswordStrength(string password)
         {
